@@ -1,4 +1,16 @@
-import { Container, Header, Icon, Photo, User, UserGreetings, UserInfo, UserName, UserWrapper } from './styles'
+import { HighlightCard } from '../../components/HighlightCard'
+import {
+  Container,
+  Header,
+  Icon,
+  Photo,
+  User,
+  UserGreetings,
+  UserInfo,
+  UserName,
+  UserWrapper,
+  HighlightCards
+} from './styles'
 
 export function Dashboard() {
   return (
@@ -15,6 +27,12 @@ export function Dashboard() {
           <Icon name="power" />
         </UserWrapper>
       </Header>
+
+      <HighlightCards>
+        <HighlightCard />
+        <HighlightCard />
+        <HighlightCard />
+      </HighlightCards>
     </Container>
   )
 }
