@@ -4,7 +4,7 @@ interface CategorySelectProps {
   title: string
 }
 
-export function CategorySelect({title}: CategorySelectProps) {
+export function CategorySelectButton({title}: CategorySelectProps) {
   return (
     <Container>
       <Category>{title}</Category>
