@@ -52,8 +52,6 @@ export function Register() {
     resolver: yupResolver(schema)
   })
 
-  const dataKey = '@gofinances:transactions'
-
   function handleTransactionTypeSelect(type: 'income' | 'outcome') {
     setTransactionType(type)
   }
@@ -78,12 +76,14 @@ export function Register() {
     const newTransaction = {
       id: String(uuid.v4()),
       ...form,
-      transactionType,
+      type: transactionType,
       category: category.key,
       date: new Date()
     }
 
     try {
+      const dataKey = '@gofinances:transactions'
+
       const data = await AsyncStorage.getItem(dataKey)
       const formattedData = data ? JSON.parse(data) : []
 
@@ -102,18 +102,9 @@ export function Register() {
 
     } catch (error) {
       console.log(error)
-      Alert.alert("Não foi possível salvar.")
+      Alert.alert("Não foi possível salvar a transação.")
     }
   }
-
-  useEffect(() => {
-    async function loadData() {
-      const data = await AsyncStorage.getItem(dataKey)
-      console.log(JSON.parse(data!))
-    }
-
-    loadData()
-  }, [])
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
