@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 
 import { HighlightCard } from '../../components/HighlightCard'
 import { TransactionCard, TransactionProps } from '../../components/TransactionCard'
+import { convertToCurrency } from '../../utils/convertToCurrency';
 
 import {
   Container,
@@ -25,8 +26,19 @@ export interface TransactionListProps extends TransactionProps {
   id: string;
 }
 
+interface HighlightProps {
+  amount: string;
+}
+
+interface HighlightData {
+  outcome: HighlightProps,
+  income: HighlightProps,
+  total: HighlightProps
+}
+
 export function Dashboard() {
   const [transactions, setTransactions] = useState<TransactionListProps[]>([])
+  const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
   async function loadTransactions() {
     const dataKey = '@gofinances:transactions'
@@ -34,12 +46,19 @@ export function Dashboard() {
     const response = await AsyncStorage.getItem(dataKey)
     const data = response ? JSON.parse(response) : [];
 
+    let incomeTotal = 0;
+    let outcomeTotal = 0;
+
     const dataFormatted: TransactionListProps[] = data
       .map((transaction: TransactionListProps) => {
-        const amount = Number(transaction.amount).toLocaleString('pt-BR', {
-          style: 'currency',
-          currency: 'BRL'
-        })
+
+        if (transaction.type === 'income') {
+          incomeTotal += Number(transaction.amount)
+        } else {
+          outcomeTotal += Number(transaction.amount)
+        }
+
+        const amount = convertToCurrency(transaction.amount)
 
         const date = Intl.DateTimeFormat('pt-BR', {
           day: '2-digit',
@@ -55,6 +74,18 @@ export function Dashboard() {
       })
 
     setTransactions(dataFormatted)
+
+    setHighlightData({
+      income: {
+        amount: convertToCurrency(incomeTotal)
+      },
+      outcome: {
+        amount: convertToCurrency(outcomeTotal)
+      },
+      total: {
+        amount: convertToCurrency(incomeTotal - outcomeTotal)
+      }
+    })
   }
 
   useFocusEffect(useCallback(() => {
@@ -80,19 +111,19 @@ export function Dashboard() {
         <HighlightCard
           type="income"
           title="Entradas"
-          amount="R$ 17.400,00"
+          amount={highlightData.income.amount}
           lastTransaction='Última entrada dia 09 de junho'
         />
         <HighlightCard
           type="outcome"
           title="Saídas"
-          amount="R$ 7.100,00"
+          amount={highlightData.outcome.amount}
           lastTransaction='Última saída dia 09 de junho'
         />
         <HighlightCard
           type="total"
           title="Total"
-          amount="R$ 10.300,00"
+          amount={highlightData.total.amount}
           lastTransaction='Última entrada dia 1 a 16 de junho'
         />
       </HighlightCards>
@@ -105,7 +136,6 @@ export function Dashboard() {
           keyExtractor={item => item.id}
           renderItem={({ item }) => <TransactionCard transaction={item} />}
         />
-
 
       </Transactions>
     </Container>
