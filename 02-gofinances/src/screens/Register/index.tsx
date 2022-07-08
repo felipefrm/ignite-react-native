@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { useNavigation, NavigationProp, ParamListBase, } from "@react-navigation/native";
 
 import { Button } from "../../components/Form/Button";
+import { Header } from "../../components/Header";
 import { CategorySelectButton } from "../../components/Form/CategorySelectButton";
 import { InputForm } from "../../components/Form/InputForm";
 import { TransactionTypeButton } from "../../components/Form/TransactionTypeButton";
@@ -15,8 +16,6 @@ import { CategorySelect } from "../CategorySelect";
 
 import {
   Container,
-  Header,
-  Title,
   Form,
   Fields,
   TransactionTypes
@@ -109,9 +108,7 @@ export function Register() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <Container>
-        <Header>
-          <Title>Cadastro</Title>
-        </Header>
+        <Header title="Cadastro" />
 
         <Form>
           <Fields>
