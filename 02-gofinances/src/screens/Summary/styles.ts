@@ -8,7 +8,10 @@ export const Container = styled.View`
   background-color: ${({ theme }) => theme.colors.background};
 `
 
-export const Content = styled.ScrollView``
+export const Content = styled.ScrollView.attrs({
+  showsVerticalScrollIndicator: false,
+  contentContainerStyle: { paddingHorizontal: 24 }
+})``
 
 export const ChartContainer = styled.View`
   width: 100%;
@@ -32,7 +35,7 @@ export const MonthSelectIcon = styled(Feather)`
 `
 
 export const Month = styled.Text`
-  font-family: ${({theme}) => theme.fonts.regular };
+  font-family: ${({ theme }) => theme.fonts.regular};
   font-size: ${RFValue(20)}px;
 `
 

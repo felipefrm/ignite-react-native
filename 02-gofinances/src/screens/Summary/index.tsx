@@ -1,8 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
+import { useFocusEffect } from "@react-navigation/native";
 import { addMonths, format, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { VictoryPie } from "victory-native";
@@ -43,13 +44,11 @@ interface CategoryData {
 export function Summary() {
   const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([])
   const [selectedDate, setSelectedDate] = useState(new Date())
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   const theme = useTheme()
 
   function handleDateChange(action: 'prev' | 'next') {
-    setIsLoading(true)
-
     if (action === 'next') {
       setSelectedDate(addMonths(selectedDate, 1))
     } else {
@@ -58,6 +57,8 @@ export function Summary() {
   }
 
   async function loadData() {
+    setIsLoading(true)
+
     const dataKey = '@gofinances:transactions'
     const response = await AsyncStorage.getItem(dataKey)
     const transactions = response ? JSON.parse(response) : []
@@ -100,23 +101,16 @@ export function Summary() {
     setIsLoading(false)
   }
 
-  useEffect(() => {
+  useFocusEffect(useCallback(() => {
     loadData()
-  }, [selectedDate])
+  }, [selectedDate]))
 
   return (
     <Container>
       <Header title="Resumo por categoria" />
       {
         isLoading ? <Loading /> : (
-          <Content
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 24,
-              paddingBottom: useBottomTabBarHeight()
-            }}
-          >
-
+          <>
             <MonthSelect>
               <MonthSelectButton onPress={() => handleDateChange('prev')}>
                 <MonthSelectIcon name="chevron-left" />
@@ -146,17 +140,19 @@ export function Summary() {
               />
             </ChartContainer>
 
-            {
-              totalByCategories.map(item => (
-                <HistoryCard
-                  key={item.key}
-                  title={item.name}
-                  amount={item.totalFormatted}
-                  color={item.color}
-                />
-              ))
-            }
-          </Content>
+            <Content>
+              {
+                totalByCategories.map(item => (
+                  <HistoryCard
+                    key={item.key}
+                    title={item.name}
+                    amount={item.totalFormatted}
+                    color={item.color}
+                  />
+                ))
+              }
+            </Content>
+          </>
         )
       }
     </Container>
