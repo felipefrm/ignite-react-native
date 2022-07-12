@@ -1,10 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
 import { useTheme } from 'styled-components';
 
 import { HighlightCard } from '../../components/HighlightCard'
+import { Loading } from '../../components/Loading';
 import { TransactionCard, TransactionProps } from '../../components/TransactionCard'
 import { convertToCurrency } from '../../utils/convertToCurrency';
 
@@ -21,8 +21,7 @@ import {
   HighlightCards,
   Transactions,
   Title,
-  TransactionList,
-  LoadContainer
+  TransactionList
 } from './styles';
 
 export interface TransactionListProps extends TransactionProps {
@@ -122,11 +121,7 @@ export function Dashboard() {
   return (
     <Container>
       {
-        isLoading ? (
-          <LoadContainer>
-            <ActivityIndicator color={theme.colors.primary} size="large" />
-          </LoadContainer>
-        ) : (
+        isLoading ? <Loading /> : (
           <>
             <Header>
               <UserWrapper>
