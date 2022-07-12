@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback, useState } from 'react';
-import { useTheme } from 'styled-components';
 
 import { HighlightCard } from '../../components/HighlightCard'
 import { Loading } from '../../components/Loading';
@@ -44,12 +43,9 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState<TransactionListProps[]>([])
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
-  const theme = useTheme()
-
-  function getLastTransactionDate(type: 'income' | 'outcome') {
-    const lastTransaction = new Date(Math.max.apply(
-      Math,
-      transactions
+  function getLastTransactionDate(transactions: TransactionListProps[], type: 'income' | 'outcome') {
+    const lastTransaction = new Date(Math.max(
+      ...transactions
         .filter(transaction => transaction.type === type)
         .map(transaction => new Date(transaction.date).getTime())
     ));
@@ -92,8 +88,8 @@ export function Dashboard() {
 
     setTransactions(dataFormatted)
 
-    const lastIncomeTransaction = getLastTransactionDate('income')
-    const lastOutcomeTransaction = getLastTransactionDate('outcome')
+    const lastIncomeTransaction = getLastTransactionDate(dataFormatted, 'income')
+    const lastOutcomeTransaction = getLastTransactionDate(dataFormatted, 'outcome')
     const totalInterval = `01 a ${lastOutcomeTransaction}`
 
     setHighlightData({
