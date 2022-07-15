@@ -5,10 +5,12 @@ import { Poppins_400Regular, Poppins_500Medium, Poppins_700Bold, useFonts } from
 import { NavigationContainer } from "@react-navigation/native";
 import * as SplashScreen from 'expo-splash-screen';
 import { ThemeProvider } from "styled-components";
-
-import theme from "./src/global/styles/theme";
-import { AppRoutes } from "./src/routes/app.routes";
 import { StatusBar } from 'react-native';
+
+import { AppRoutes } from "./src/routes/app.routes";
+import { SignIn } from './src/screens/SignIn';
+import { AuthProvider } from './src/hooks/auth';
+import theme from "./src/global/styles/theme";
 
 export default function App() {
   SplashScreen.preventAutoHideAsync();
@@ -29,7 +31,9 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <NavigationContainer>
         <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
-        <AppRoutes />
+        <AuthProvider>
+          <SignIn />
+        </AuthProvider>
       </NavigationContainer>
     </ThemeProvider>
   )
