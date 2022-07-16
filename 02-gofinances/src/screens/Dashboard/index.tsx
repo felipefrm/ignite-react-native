@@ -5,6 +5,8 @@ import { useCallback, useState } from 'react';
 import { HighlightCard } from '../../components/HighlightCard'
 import { Loading } from '../../components/Loading';
 import { TransactionCard, TransactionProps } from '../../components/TransactionCard'
+
+import { useAuth } from '../../hooks/auth';
 import { convertToCurrency } from '../../utils/convertToCurrency';
 
 import {
@@ -13,6 +15,7 @@ import {
   Icon,
   Photo,
   User,
+  LogoutButton,
   UserGreetings,
   UserInfo,
   UserName,
@@ -42,6 +45,8 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [transactions, setTransactions] = useState<TransactionListProps[]>([])
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
+
+  const {signOut} = useAuth();
 
   function getLastTransactionDate(transactions: TransactionListProps[], type: 'income' | 'outcome') {
     const lastTransaction = new Date(Math.max(
@@ -128,7 +133,9 @@ export function Dashboard() {
                     <UserName>Felipe</UserName>
                   </User>
                 </UserInfo>
-                <Icon name="power" />
+                <LogoutButton onPress={signOut}>
+                  <Icon name="power" />
+                </LogoutButton>
               </UserWrapper>
             </Header>
 

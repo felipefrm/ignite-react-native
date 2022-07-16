@@ -18,6 +18,7 @@ interface AuthContextData {
   user: User;
   signInWithGoogle: () => Promise<void>;
   signInWithApple: () => Promise<void>;
+  signOut: () => Promise<void>;
 }
 
 interface AuthGoogleResponse {
@@ -31,7 +32,6 @@ const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>({} as User);
-  const [isLoadingStorage, setIsLoadingStorage] = useState(true);
 
   const userStorageKey = '@gofinances:user';
 
@@ -95,15 +95,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signOut() {
+    try {
+      await AsyncStorage.removeItem(userStorageKey)
+      setUser({} as User)
+    } catch (error) {
+      throw new Error(error as string)
+    }
+  }
+
   useEffect(() => {
     async function loadUserStorageData() {
       const storagedData = await AsyncStorage.getItem(userStorageKey);
-      
+
       if (storagedData) {
         setUser(JSON.parse(storagedData))
       }
-
-      setIsLoadingStorage(false)
     }
 
     loadUserStorageData();
@@ -113,7 +120,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     <AuthContext.Provider value={{
       user,
       signInWithGoogle,
-      signInWithApple
+      signInWithApple,
+      signOut
     }}
     >
       {children}
