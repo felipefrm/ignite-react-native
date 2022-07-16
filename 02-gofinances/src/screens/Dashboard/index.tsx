@@ -49,8 +49,14 @@ export function Dashboard() {
   const { user, signOut } = useAuth();
 
   function getLastTransactionDate(transactions: TransactionListProps[], type: 'income' | 'outcome') {
+    const transactionsFiltered = transactions.filter(transaction => transaction.type === type);
+
+    if (transactionsFiltered.length === 0) {
+      return 0;
+    }
+
     const lastTransaction = new Date(Math.max(
-      ...transactions
+      ...transactionsFiltered
         .filter(transaction => transaction.type === type)
         .map(transaction => new Date(transaction.date).getTime())
     ));
@@ -95,16 +101,22 @@ export function Dashboard() {
 
     const lastIncomeTransaction = getLastTransactionDate(dataFormatted, 'income')
     const lastOutcomeTransaction = getLastTransactionDate(dataFormatted, 'outcome')
-    const totalInterval = `01 a ${lastOutcomeTransaction}`
+    const totalInterval = lastOutcomeTransaction === 0 
+    ? 'Não há transações'
+    : `01 a ${lastOutcomeTransaction}`
 
     setHighlightData({
       income: {
         amount: convertToCurrency(incomeTotal),
-        lastTransaction: `Última entrada dia ${lastIncomeTransaction}`
+        lastTransaction: lastIncomeTransaction === 0
+          ? 'Não há transações'
+          : `Última entrada dia ${lastIncomeTransaction}`
       },
       outcome: {
         amount: convertToCurrency(outcomeTotal),
-        lastTransaction: `Última saída dia ${lastOutcomeTransaction}`
+        lastTransaction: lastOutcomeTransaction === 0
+          ? 'Não há transações'
+          : `Última entrada dia ${lastOutcomeTransaction}`
       },
       total: {
         amount: convertToCurrency(incomeTotal - outcomeTotal),
