@@ -46,7 +46,7 @@ export function Dashboard() {
   const [transactions, setTransactions] = useState<TransactionListProps[]>([])
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
-  const {signOut} = useAuth();
+  const { user, signOut } = useAuth();
 
   function getLastTransactionDate(transactions: TransactionListProps[], type: 'income' | 'outcome') {
     const lastTransaction = new Date(Math.max(
@@ -127,10 +127,10 @@ export function Dashboard() {
             <Header>
               <UserWrapper>
                 <UserInfo>
-                  <Photo source={{ uri: 'https://github.com/felipefrm.png' }} />
+                  <Photo source={{ uri: user.photo }} />
                   <User>
                     <UserGreetings>Olá, </UserGreetings>
-                    <UserName>Felipe</UserName>
+                    <UserName>{user.name}</UserName>
                   </User>
                 </UserInfo>
                 <LogoutButton onPress={signOut}>
