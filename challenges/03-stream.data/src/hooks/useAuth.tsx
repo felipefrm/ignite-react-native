@@ -1,5 +1,5 @@
 import { makeRedirectUri, revokeAsync, startAsync } from 'expo-auth-session';
-import React, { useEffect, createContext, useContext, useState, ReactNode } from 'react';
+import { useEffect, createContext, useContext, useState, ReactNode } from 'react';
 import { generateRandom } from 'expo-auth-session/build/PKCE';
 
 import { api } from '../services/api';
@@ -45,7 +45,7 @@ function AuthProvider({ children }: AuthProviderData) {
       const REDIRECT_URI = makeRedirectUri({ useProxy: true });
       const RESPONSE_TYPE = 'token';
       const SCOPE = encodeURI('openid user:read:email user:read:follows');
-      const FORCE_VERIFY = 'true';
+      const FORCE_VERIFY = true;
       const STATE = generateRandom(30);
 
       const authUrl = twitchEndpoints.authorization +
@@ -65,8 +65,15 @@ function AuthProvider({ children }: AuthProviderData) {
 
         api.defaults.headers.common['Authorization'] = `Bearer ${response.params.access_token}`;
 
-        const { data } = await api.post('/users');
-        setUser(data[0]);
+        const { data: { data } } = await api.get('/users');
+
+        setUser({
+          id: data[0].id,
+          display_name: data[0].display_name,
+          email: data[0].email,
+          profile_image_url: data[0].profile_image_url,
+        });
+        
         setUserToken(response.params.access_token);
       }
     } catch (error) {
@@ -78,17 +85,19 @@ function AuthProvider({ children }: AuthProviderData) {
 
   async function signOut() {
     try {
-      // set isLoggingOut to true
-
-      // call revokeAsync with access_token, client_id and twitchEndpoint revocation
+      setIsLoggingOut(true)
+      await revokeAsync(
+        { token: userToken, clientId: CLIENT_ID },
+        { revocationEndpoint: twitchEndpoints.revocation },
+      )
     } catch (error) {
     } finally {
-      // set user state to an empty User object
-      // set userToken state to an empty string
+      setUser({} as User);
+      setUserToken('');
 
-      // remove "access_token" from request's authorization header
+      delete api.defaults.headers.common['Authorization'];
 
-      // set isLoggingOut to false
+      setIsLoggingOut(false)
     }
   }
 
