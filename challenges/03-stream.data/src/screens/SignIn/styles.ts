@@ -51,7 +51,7 @@ export const Description = styled.Text`
   color: ${props => props.theme.colors.white};
 `;
 
-export const SignInButton = styled(RectButton)`
+export const SignInButton = styled.TouchableOpacity`
   margin-top: 40px;
 
   background-color: ${props => props.theme.colors.purple};
