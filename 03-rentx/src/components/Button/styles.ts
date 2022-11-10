@@ -13,9 +13,7 @@ export const Container = styled.TouchableOpacity<ButtonProps>`
   align-items: center;
   justify-content: center;
 
-  background-color: ${({ theme, color }) =>
-    color ? color : theme.colors.main
-  };
+  background-color: ${({ color }) => color};
 `
 
 export const Title = styled.Text`

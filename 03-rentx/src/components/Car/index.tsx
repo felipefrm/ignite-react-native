@@ -1,3 +1,5 @@
+import { TouchableOpacityProps } from "react-native";
+
 import {
   Container,
   Details,
@@ -20,16 +22,16 @@ interface CarData {
   rent: {
     period: string;
     price: number;
-  } 
+  }
 }
 
-interface CarProps {
+interface CarProps extends TouchableOpacityProps {
   data: CarData;
 }
 
-export function Car({ data }: CarProps) {
+export function Car({ data, ...rest }: CarProps) {
   return (
-    <Container>
+    <Container {...rest} >
       <Details>
         <Brand>{data.brand}</Brand>
         <Name>{data.name}</Name>
