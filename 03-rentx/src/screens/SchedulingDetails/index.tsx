@@ -3,7 +3,7 @@ import { RFValue } from "react-native-responsive-fontsize";
 import { useTheme } from "styled-components";
 import { useNavigation } from "@react-navigation/native";
 
-import { Acessory } from "../../components/Acessory";
+import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
 import { Button } from "../../components/Button";
@@ -27,7 +27,7 @@ import {
   Rent,
   Period,
   Price,
-  Acessories,
+  Accessories,
   Footer,
   RentalPeriod,
   CalendarIcon,
@@ -77,14 +77,14 @@ export function SchedulingDetails() {
 
         </Details>
 
-        <Acessories>
-          <Acessory name="380Km/h" icon={SpeedSvg} />
-          <Acessory name="3.2s" icon={AccelerationSvg} />
-          <Acessory name="800 HP" icon={ForceSvg} />
-          <Acessory name="Gasolina" icon={GasolineSvg} />
-          <Acessory name="Auto" icon={ExchangeSvg} />
-          <Acessory name="2 pessoas" icon={PeopleSvg} />
-        </Acessories>
+        <Accessories>
+          <Accessory name="380Km/h" icon={SpeedSvg} />
+          <Accessory name="3.2s" icon={AccelerationSvg} />
+          <Accessory name="800 HP" icon={ForceSvg} />
+          <Accessory name="Gasolina" icon={GasolineSvg} />
+          <Accessory name="Auto" icon={ExchangeSvg} />
+          <Accessory name="2 pessoas" icon={PeopleSvg} />
+        </Accessories>
 
         <RentalPeriod>
           <CalendarIcon>
