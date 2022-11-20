@@ -1,6 +1,6 @@
 import styled from 'styled-components/native';
 import { RFValue } from 'react-native-responsive-fontsize';
-import { FlatList } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import { CarDTO } from '../../dtos/CarDTO';
 
 export const Container = styled.View`
@@ -36,3 +36,18 @@ export const CarList = styled(FlatList).attrs({
   },
   shouwVerticalScrollIndicator: false,
 })`` as React.ComponentType as new () => FlatList<CarDTO>;
+
+export const MyCarsButton = styled(TouchableOpacity)`
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+
+  justify-content: center;
+  align-items: center;
+
+  background-color: ${({ theme }) => theme.colors.main};
+  
+  position: absolute;
+  bottom: 13px;
+  right: 22px;
+`
