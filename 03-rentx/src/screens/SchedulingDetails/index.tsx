@@ -1,20 +1,19 @@
-import { Feather } from "@expo/vector-icons";
+import { useEffect, useState } from "react";
+import { Alert } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useTheme } from "styled-components";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
+import { useTheme } from "styled-components";
+import { format } from "date-fns";
 
 import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
 import { Button } from "../../components/Button";
-import { CarDTO } from "../../dtos/CarDTO";
 
-import SpeedSvg from "../../assets/speed.svg";
-import AccelerationSvg from "../../assets/acceleration.svg";
-import ForceSvg from "../../assets/force.svg";
-import GasolineSvg from "../../assets/gasoline.svg";
-import ExchangeSvg from "../../assets/exchange.svg";
-import PeopleSvg from "../../assets/people.svg";
+import { CarDTO } from "../../dtos/CarDTO";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
+import { api } from "../../services/api";
 
 import {
   Container,
@@ -41,11 +40,6 @@ import {
   RentalPriceQuota,
   RentalPriceTotal
 } from "./styles";
-import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
-import { useEffect, useState } from "react";
-import { format } from "date-fns";
-import { api } from "../../services/api";
-import { Alert } from "react-native";
 
 interface Params {
   car: CarDTO;
@@ -59,6 +53,8 @@ interface RentalPeriod {
 
 export function SchedulingDetails() {
   const [rentalPeriod, setRentalPeriod] = useState<RentalPeriod>({} as RentalPeriod);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
 
   const theme = useTheme();
   const navigation = useNavigation();
@@ -69,6 +65,8 @@ export function SchedulingDetails() {
 
   async function handleConfirmRental() {
     try {
+      setIsLoading(true);
+
       const { data: schedulesByCar } = await api.get(`/schedules_bycars/${car.id}`);
 
       const unavailableDates = [
@@ -91,6 +89,7 @@ export function SchedulingDetails() {
       navigation.navigate("SchedulingComplete");
     } catch (error) {
       console.log(error)
+      setIsLoading(false);
       Alert.alert('Não foi possível confirmar o agendamento.');
     }
   }
@@ -181,6 +180,8 @@ export function SchedulingDetails() {
           title="Alugar agora"
           color={theme.colors.success}
           onPress={handleConfirmRental}
+          disabled={isLoading}
+          loading={isLoading}
         />
       </Footer>
     </Container>
