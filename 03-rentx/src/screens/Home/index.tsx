@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { StatusBar, TouchableOpacity, StyleSheet } from "react-native";
+import { StatusBar, TouchableOpacity, StyleSheet, BackHandler } from "react-native";
 import { RFValue } from "react-native-responsive-fontsize";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "styled-components";
 import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue, withSpring } from "react-native-reanimated";
+import { PanGestureHandler } from "react-native-gesture-handler";
 
 import { api } from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
@@ -21,7 +22,6 @@ import {
   HeaderContent,
   TotalCars,
 } from "./styles";
-import { PanGestureHandler } from "react-native-gesture-handler";
 
 const ButtonAnimated = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -82,6 +82,14 @@ export function Home() {
     fetchCars();
   }, [])
 
+  useFocusEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    })
+
+    return () => backHandler.remove();
+  })
+
   return (
     <Container>
       <StatusBar
@@ -92,9 +100,11 @@ export function Home() {
       <Header>
         <HeaderContent>
           <Logo width={RFValue(108)} heigth={RFValue(12)} />
-          <TotalCars>
-            Total de {cars.length} carros
-          </TotalCars>
+          {!isLoadingCars &&
+            <TotalCars>
+              Total de {cars.length} carros
+            </TotalCars>
+          }
         </HeaderContent>
       </Header>
 
