@@ -9,6 +9,7 @@ import { api } from "../../services/api";
 
 import { BackButton } from "../../components/BackButton";
 import { Car } from "../../components/Car";
+import { LoadingAnimation } from "../../components/LoadingAnimation";
 
 import {
   Appointments,
@@ -25,7 +26,6 @@ import {
   SubTitle,
   Title
 } from "./styles";
-import { Loading } from "../../components/Loading";
 
 interface CarProps {
   id: string;
@@ -84,7 +84,7 @@ export function MyCars() {
       </Header>
 
       {
-        loadingCars ? <Loading /> :
+        loadingCars ? <LoadingAnimation /> :
           <Content>
             <Appointments>
               <AppointmentsTitle>Agendamentos feitos</AppointmentsTitle>

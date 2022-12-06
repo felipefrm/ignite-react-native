@@ -11,7 +11,6 @@ import { api } from "../../services/api";
 import { CarDTO } from "../../dtos/CarDTO";
 
 import { Car } from "../../components/Car";
-import { Loading } from "../../components/Loading";
 
 import Logo from '../../assets/logo.svg';
 
@@ -22,6 +21,7 @@ import {
   HeaderContent,
   TotalCars,
 } from "./styles";
+import { LoadingAnimation } from "../../components/LoadingAnimation";
 
 const ButtonAnimated = Animated.createAnimatedComponent(TouchableOpacity);
 
@@ -108,7 +108,7 @@ export function Home() {
         </HeaderContent>
       </Header>
 
-      {isLoadingCars ? <Loading /> : (
+      {isLoadingCars ? <LoadingAnimation /> : (
         <CarList
           data={cars}
           keyExtractor={item => item.id}
