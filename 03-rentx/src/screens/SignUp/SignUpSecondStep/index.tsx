@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { 
+import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
@@ -33,7 +33,7 @@ interface Params {
 }
 
 
-export function SignUpSecondStep(){
+export function SignUpSecondStep() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
 
@@ -44,17 +44,23 @@ export function SignUpSecondStep(){
   const { user } = route.params as Params;
 
   function handleBack() {
-    navigation.goBack();    
+    navigation.goBack();
   }
 
   async function handleRegister() {
-    if(!password || !passwordConfirm){
+    if (!password || !passwordConfirm) {
       return Alert.alert('Informe a senha e a confirmação');
     }
 
-    if(password != passwordConfirm){
+    if (password != passwordConfirm) {
       return Alert.alert('As senhas não são iguais');
     }
+
+    navigation.navigate('Confirmation', {
+      nextScreenRoute: 'SignIn',
+      title: 'Conta Criada!',
+      message: `Agora é só fazer login\ne aproveitar.`
+    });
   }
 
   return (
@@ -79,13 +85,13 @@ export function SignUpSecondStep(){
 
           <Form>
             <FormTitle>2. Senha</FormTitle>
-            <PasswordInput 
+            <PasswordInput
               icon="lock"
               placeholder="Senha"
               onChangeText={setPassword}
               value={password}
             />
-            <PasswordInput 
+            <PasswordInput
               icon="lock"
               placeholder="Repetir Senha"
               onChangeText={setPasswordConfirm}
@@ -93,10 +99,10 @@ export function SignUpSecondStep(){
             />
           </Form>
 
-          <Button 
+          <Button
             color={theme.colors.success}
-            title="Cadastrar"     
-            onPress={handleRegister}   
+            title="Cadastrar"
+            onPress={handleRegister}
           />
         </Container>
       </TouchableWithoutFeedback>
